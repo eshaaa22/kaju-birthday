@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday Kaju! 🎂</title>
+<style>
+:root{--pink:#ff5fa2;--gold:#ffd54a;--text:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+
+body{
+  background: linear-gradient(45deg, #ff0a6c, #2d27ff, #ffaa00, #00d4ff, #ff00cc);
+  background-size: 400% 400%;
+  animation: bgShift 6s ease infinite;
+  color:var(--text);
+  font-family:"Trebuchet MS",system-ui,sans-serif;
+  text-align:center;
+}
+@keyframes bgShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.scene{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;z-index:2}
+.scene.on{display:flex;animation:fade .8s}
+@keyframes fade{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+
+h2{font-size:clamp(22px,5vw,34px);margin:0; transition: opacity 0.5s ease;}
+
+.btn{font-size:20px;font-weight:bold;color:#fff;background:linear-gradient(135deg,var(--pink),#ff8a3d);border:0;border-radius:40px;padding:14px 34px;cursor:pointer;box-shadow:0 6px 24px rgba(255,95,162,.8);animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+
+/* candle */
+.flame{transform-origin:50% 100%;animation:flick .3s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+.out .flame{display:none}
+.smoke{opacity:0}
+.out .smoke{animation:smoke 2.5s forwards}
+@keyframes smoke{0%{opacity:.8;transform:translateY(0)}100%{opacity:0;transform:translateY(-70px)}}
+
+/* celebration */
+#s2{z-index:6;pointer-events:none}
+.big{font-family:"Arial Black", "Impact", sans-serif; font-size:clamp(50px,18vw,160px); font-weight:900; line-height:1.05; color:var(--gold); text-shadow:0 0 20px #ff5fa2,0 0 50px #ff5fa2,4px 4px 0 #b3225f; animation:boom 1.2s cubic-bezier(.2,1.6,.4,1) both}
+.big.k{font-family:"Trebuchet MS", system-ui, sans-serif; color:#fff; font-size:clamp(34px,11vw,90px); animation-delay:.5s}
+@keyframes boom{0%{transform:scale(0) rotate(-20deg);opacity:0}100%{transform:none;opacity:1}}
+.balloon{position:fixed;bottom:-140px;width:70px;height:88px;border-radius:50% 50% 48% 48%;z-index:3;animation:rise linear forwards}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:60px;background:#fff8}
+@keyframes rise{to{transform:translateY(-130vh) rotate(8deg)}}
+.flash{position:fixed;inset:0;background:#fff;z-index:9;pointer-events:none;animation:fl .6s forwards}
+@keyframes fl{to{opacity:0}}
+
+/* cake */
+#chakku{position:absolute;font-size:60px;left:60%;top:-10px;opacity:0;transform:rotate(-30deg)}
+.cutting #chakku{animation:cut 1.6s forwards}
+@keyframes cut{0%{opacity:1;transform:translate(0,0) rotate(-30deg)}50%{opacity:1;transform:translate(-30px,150px) rotate(0)}100%{opacity:0;transform:translate(-30px,170px) rotate(0)}}
+#slice{transition:transform 1.2s .9s}
+.cutting #slice{transform:translate(35px,10px) rotate(8deg)}
+.cakebox{position:relative;width:min(80vw,360px)}
+
+/* feeding */
+#feed_div{font-size:min(36vw,170px);transition:transform 1.4s ease-in,opacity .5s 1.2s;transform:translateY(120px) scale(.5) rotate(-15deg);display:inline-block}
+.go #feed_div{transform:translateY(-10px) scale(6) rotate(0);opacity:0}
+#yum{font-size:clamp(34px,9vw,70px);color:var(--gold);font-weight:900;display:none}
+.done #yum{display:block;animation:boom 1s both}
+
+/* gift */
+.gift{position:relative;width:150px;height:150px;cursor:pointer;animation:pulse 1s infinite}
+.gift .box{position:absolute;bottom:0;left:0;width:150px;height:100px;background:#e63a7a;border-radius:6px}
+.gift .box::before{content:"";position:absolute;left:62px;top:0;width:26px;height:100%;background:var(--gold)}
+.gift .lid{position:absolute;top:0;left:-8px;width:166px;height:55px;background:#ff5fa2;border-radius:6px;transition:transform .8s,opacity .8s}
+.gift .lid::before{content:"";position:absolute;left:70px;top:0;width:26px;height:100%;background:var(--gold)}
+.gift.open{animation:none}
+.gift.open .lid{transform:translateY(-120px) rotate(-25deg);opacity:0}
+
+/* photos */
+.photo{position:fixed;left:50%;top:50%;width:min(42vw,160px);aspect-ratio:3/4;margin:-60px 0 0 -60px;border:6px solid #fff;border-radius:8px;box-shadow:0 8px 24px #0008;z-index:4;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:50px;transform:scale(0);transition:transform 1.2s cubic-bezier(.2,1.4,.4,1),left 1.2s,top 1.2s}
+.photo img{width:100%;height:100%;object-fit:cover}
+#final{position:fixed;bottom:2%;left:0;right:0;font-size:clamp(22px,5vw,36px);color:var(--gold);z-index:6;opacity:0;transition:opacity 1.5s 1.5s; text-shadow:0 2px 10px rgba(0,0,0,0.5);}
+
+/* Volume Hint */
+#vol_hint {position:fixed; bottom:8%; left:0; right:0; font-size:clamp(16px, 4vw, 22px); color:#fff; font-weight:bold; opacity:0.9; text-shadow: 0 2px 5px rgba(0,0,0,0.6); animation:pulse 1.5s infinite; transition: opacity 0.5s ease; z-index:10; pointer-events:none;}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<!-- VOLUME HINT TEXT -->
+<div id="vol_hint">🔊 Please increase your phone volume!</div>
+
+<!-- 1 candle -->
+<div class="scene on" id="s1">
+  <svg id="candle" width="140" height="240" viewBox="0 0 140 240">
+    <g class="flame"><ellipse cx="70" cy="58" rx="22" ry="40" fill="#ff9d2e" opacity=".5"/><path d="M70 20C90 50 88 76 70 80 52 76 50 50 70 20Z" fill="#ffd54a"/><path d="M70 45C80 60 78 74 70 76 62 74 60 60 70 45Z" fill="#fff6c9"/></g>
+    <g class="smoke"><path d="M70 70q-12-20 0-35t0-30" stroke="#ccc" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+    <rect x="58" y="80" width="24" height="150" rx="5" fill="#ff8ac0"/>
+    <path d="M58 110h24M58 140h24M58 170h24M58 200h24" stroke="#fff" stroke-width="6" opacity=".6"/>
+    <rect x="20" y="226" width="100" height="10" rx="5" fill="#ddd"/>
+  </svg>
+  <h2 id="c_txt">Fuuuu deo kaju!</h2>
+  <button class="btn" id="Fuuu">🌬️ Fuuu</button>
+</div>
+
+<!-- 2 celebration -->
+<div class="scene" id="s2">
+  <div class="big">HAPPY BIRTHDAY</div>
+  <div class="big k">KAJUMONI🎉</div>
+</div>
+
+<!-- 3 cake -->
+<div class="scene" id="s3">
+  <h2>Cake kato kaju🎂</h2>
+  <div class="cakebox" id="cakebox">
+    <svg viewBox="0 0 300 230" width="100%">
+      <ellipse cx="150" cy="205" rx="140" ry="18" fill="#eee"/>
+      <g id="body">
+        <rect x="40" y="130" width="180" height="70" fill="#b5651d"/>
+        <rect x="40" y="95" width="180" height="40" fill="#ff8ac0"/>
+        <path d="M40 95q15 25 30 0t30 0 30 0 30 0 30 0 30 0v6H40z" fill="#fff"/>
+        <circle cx="80" cy="85" r="9" fill="#e11d48"/><circle cx="130" cy="85" r="9" fill="#e11d48"/><circle cx="180" cy="85" r="9" fill="#e11d48"/>
+      </g>
+      <g id="slice">
+        <rect x="220" y="130" width="60" height="70" fill="#b5651d"/>
+        <rect x="220" y="95" width="60" height="40" fill="#ff8ac0"/>
+        <path d="M220 95q15 25 30 0t30 0v6h-60z" fill="#fff"/>
+        <circle cx="250" cy="85" r="9" fill="#e11d48"/>
+      </g>
+    </svg>
+    <div id="chakku">🔪</div>
+  </div>
+  <button class="btn" id="kato">🔪 Katoo</button>
+</div>
+
+<!-- 4 feeding -->
+<div class="scene" id="s4">
+  <h2 id="feedtxt">Cake khao kaju🍰</h2>
+  <div id="feed_div">🍰</div>
+  <div id="yum">Khub tasshh 😋</div>
+  <button class="btn" id="khao">😋 Haaa koro kaju</button>
+</div>
+
+<!-- 5 gift -->
+<div class="scene" id="s5">
+  <h2 id="gifttxt"> Tomar jonno gip🎁</h2>
+  <div class="gift" id="gift"><div class="box"></div><div class="lid"></div></div>
+  <p id="tap"> Khulo</p>
+</div>
+<div id="final">Happy Birthday! 💖</div>
+
+<script>
+// === CUSTOM EATING MP3 AND PHOTOS ===
+const CUSTOM_EAT_SOUND = "eat-sound.mp3"; 
+
+const PHOTOS = [
+  "pic1.jpeg",
+  "pic2.jpeg",
+  "pic3.jpeg",
+  "pic4.jpeg",
+  "pic5.jpeg",
+  "pic6.jpeg"
+]; 
+// ====================================
+
+const $ = id => document.getElementById(id);
+const show = id => { document.querySelectorAll('.scene').forEach(s => s.classList.remove('on')); $(id).classList.add('on'); };
+
+let ac;
+
+function initAudio() {
+  if (!ac) ac = new (window.AudioContext||window.webkitAudioContext)();
+}
+
+// 1. BLOWING SOUND
+function playBlow() {
+  initAudio();
+  const bs = ac.createBufferSource();
+  const buf = ac.createBuffer(1, ac.sampleRate * 1.5, ac.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0; i<data.length; i++) data[i] = Math.random() * 2 - 1; 
+  bs.buffer = buf;
+  
+  const filter = ac.createBiquadFilter();
+  filter.type = 'lowpass'; filter.frequency.value = 800; 
+  
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0, ac.currentTime);
+  g.gain.linearRampToValueAtTime(1.5, ac.currentTime + 0.2); 
+  g.gain.exponentialRampToValueAtTime(0.01, ac.currentTime + 1.2); 
+  
+  bs.connect(filter); filter.connect(g); g.connect(ac.destination);
+  bs.start(); bs.stop(ac.currentTime + 1.2);
+}
+
+// 2. HAPPY BIRTHDAY TUNE
+function playTune(){
+  initAudio();
+  try{
+    const N={G4:392,A4:440,B4:494,C5:523,D5:587,E5:659,F5:698,G5:784};
+    const seq=[["G4",.75],["G4",.25],["A4",1],["G4",1],["C5",1],["B4",2],
+               ["G4",.75],["G4",.25],["A4",1],["G4",1],["D5",1],["C5",2],
+               ["G4",.75],["G4",.25],["G5",1],["E5",1],["C5",1],["B4",1],["A4",2],
+               ["F5",.75],["F5",.25],["E5",1],["C5",1],["D5",1],["C5",2]];
+    let t=ac.currentTime+.1; 
+    const beat = 0.32; 
+    seq.forEach(([n,d])=>{
+      const o=ac.createOscillator(), g=ac.createGain();
+      o.type="triangle"; o.frequency.value=N[n];
+      g.gain.setValueAtTime(0,t); 
+      g.gain.linearRampToValueAtTime(1.0,t+.03);
+      g.gain.exponentialRampToValueAtTime(.001,t+d*beat);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+d*beat);
+      t+=d*beat;
+    });
+  }catch(e){}
+}
+
+// 3. CAKE CUTTING SOUND
+function playCut(){
+  initAudio();
+  const bs = ac.createBufferSource();
+  const buf = ac.createBuffer(1, ac.sampleRate * 0.3, ac.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0; i<data.length; i++) data[i] = Math.random() * 2 - 1; 
+  bs.buffer = buf;
+  
+  const filter = ac.createBiquadFilter();
+  filter.type = 'highpass'; 
+  filter.frequency.value = 2500; 
+  
+  const g = ac.createGain();
+  g.gain.setValueAtTime(1.5, ac.currentTime); 
+  g.gain.exponentialRampToValueAtTime(0.01, ac.currentTime + 0.3); 
+  
+  bs.connect(filter); filter.connect(g); g.connect(ac.destination);
+  bs.start(); bs.stop(ac.currentTime + 0.3);
+}
+
+// 4. EATING SOUND (Duration exactly 1.5s)
+function playChomp(){
+  if (CUSTOM_EAT_SOUND) {
+    const audio = new Audio(CUSTOM_EAT_SOUND);
+    audio.volume = 0.5; 
+    audio.play().catch(e => console.log("Audio file issue:", e));
+    
+    // STRICT 1.5 SECOND SHUT-OFF
+    setTimeout(() => {
+      audio.pause();
+    }, 1500); 
+    return;
+  }
+  
+  // Fallback sound if MP3 fails (5 chomps = exactly 1.5s)
+  initAudio();
+  for(let i=0; i<5; i++){ 
+    setTimeout(() => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(150, ac.currentTime); o.frequency.exponentialRampToValueAtTime(40, ac.currentTime + 0.15);
+      g.gain.setValueAtTime(0.15, ac.currentTime); 
+      g.gain.exponentialRampToValueAtTime(0.01, ac.currentTime + 0.15);
+      o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + 0.15);
+    }, i * 300);
+  }
+}
+
+// 5. BOMB BURSTING SOUND (Realistic Explosion tuned for phones)
+function playBomb(){
+  initAudio();
+  
+  // Part A: The noisy explosion crash
+  const bufferSize = ac.sampleRate * 2; 
+  const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1; // Pure white noise
+  }
+  const noise = ac.createBufferSource();
+  noise.buffer = buffer;
+
+  const noiseFilter = ac.createBiquadFilter();
+  noiseFilter.type = 'lowpass';
+  noiseFilter.frequency.value = 1000; // Muffles it so it sounds like a distant bomb
+
+  const noiseGain = ac.createGain();
+  noiseGain.gain.setValueAtTime(1.5, ac.currentTime);
+  noiseGain.gain.exponentialRampToValueAtTime(0.01, ac.currentTime + 1.0); // Fades out like an echo
+
+  noise.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(ac.destination);
+
+  // Part B: The low punchy "Thump" 
+  const osc = ac.createOscillator();
+  const oscGain = ac.createGain();
+  osc.type = 'square'; 
+  osc.frequency.setValueAtTime(150, ac.currentTime); // Starts high enough for phones
+  osc.frequency.exponentialRampToValueAtTime(30, ac.currentTime + 0.5); // Drops into deep bass
+
+  oscGain.gain.setValueAtTime(1.5, ac.currentTime); 
+  oscGain.gain.exponentialRampToValueAtTime(0.01, ac.currentTime + 0.8);
+
+  osc.connect(oscGain);
+  oscGain.connect(ac.destination);
+
+  // Fire both off at the same time
+  noise.start();
+  osc.start();
+  noise.stop(ac.currentTime + 1.0);
+  osc.stop(ac.currentTime + 0.8);
+}
+
+// ANIMATIONS
+const cv=$('cv'), cx=cv.getContext('2d'); let P=[], running=false;
+function size(){cv.width=innerWidth;cv.height=innerHeight} size(); addEventListener('resize',size);
+function burst(x,y){
+  const hue=Math.random()*360;
+  for(let i=0;i<120;i++){const a=Math.random()*6.283,s=1+Math.random()*8; 
+    P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:60+Math.random()*40,c:`hsl(${hue+Math.random()*60},100%,60%)`,g:.08,r:3+Math.random()*3});}
+}
+function confetti(n){
+  for(let i=0;i<n;i++)P.push({x:Math.random()*cv.width,y:-10,vx:(Math.random()-.5)*5,vy:3+Math.random()*5,l:200,c:`hsl(${Math.random()*360},100%,60%)`,g:.02,r:5+Math.random()*5,sq:1});
+}
+function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  P=P.filter(p=>p.l>0);
+  P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l--;cx.globalAlpha=Math.min(1,p.l/30);cx.fillStyle=p.c;
+    p.sq?cx.fillRect(p.x,p.y,p.r,p.r*1.6):(cx.beginPath(),cx.arc(p.x,p.y,p.r,0,6.283),cx.fill());});
+  requestAnimationFrame(loop);
+}
+loop();
+function celebrate(sec){
+  const end=Date.now()+sec*1000;
+  const iv=setInterval(()=>{
+    if(Date.now()>end){clearInterval(iv);return}
+    burst(Math.random()*cv.width,Math.random()*cv.height*.7); confetti(20); 
+  },200); 
+}
+function balloons(n){
+  const cols=['#ff5fa2','#ffd54a','#5fd4ff','#9b6bff','#5fff9b','#ff8a3d', '#ff0a6c', '#fff'];
+  for(let i=0;i<n;i++){const b=document.createElement('div');b.className='balloon';
+    b.style.left=Math.random()*95+'vw';b.style.background=cols[i%cols.length];
+    b.style.animationDuration=(4+Math.random()*5)+'s';b.style.animationDelay=(Math.random()*2)+'s';
+    document.body.appendChild(b);setTimeout(()=>b.remove(),10000);}
+}
+function flash(){const f=document.createElement('div');f.className='flash';document.body.appendChild(f);setTimeout(()=>f.remove(),600)}
+
+// ===== STORY EVENTS =====
+$('Fuuu').onclick=()=>{
+  playBlow(); 
+  $('Fuuu').style.display='none';
+  $('c_txt').style.opacity='0'; 
+  
+  // Hides the volume text prompt
+  $('vol_hint').style.opacity='0';
+  
+  $('candle').classList.add('out');
+  
+  setTimeout(()=>{
+    // Removing vol hint completely from layout
+    $('vol_hint').style.display='none';
+    
+    show('s2'); flash(); playTune(); balloons(40); celebrate(10); 
+    setTimeout(flash,3000); setTimeout(()=>balloons(30),4500); setTimeout(flash,6500);
+    
+    setTimeout(()=>show('s3'), 8500); 
+  },1200);
+};
+
+$('kato').onclick=()=>{
+  playCut(); 
+  $('kato').style.display='none';
+  $('cakebox').classList.add('cutting');
+  setTimeout(()=>show('s4'),3200);
+};
+
+$('khao').onclick=()=>{
+  playChomp(); 
+  $('khao').style.display='none';
+  $('s4').classList.add('go');
+  setTimeout(()=>{
+    $('feedtxt').textContent='Shundor koira khao'; 
+    $('s4').classList.add('done');
+    flash(); celebrate(3);
+  },1500);
+  setTimeout(()=>show('s5'),4800);
+};
+
+$('gift').onclick=()=>{
+  if($('gift').classList.contains('open'))return;
+  
+  playBomb(); 
+  $('gift').classList.add('open'); 
+  $('tap').style.display='none';
+  $('gifttxt').textContent='Surprise! 💖'; 
+  
+  flash(); celebrate(8); balloons(30);
+  
+  const n=PHOTOS.length||8, emo=['🥰','📸','😍','💕','🌸','😘','🎀','✨'];
+  
+  const isMobile = window.innerWidth < 600;
+  const cols = isMobile ? 2 : Math.min(3, n); 
+  const rows = Math.ceil(n/cols);
+  
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');d.className='photo';
+    d.style.background=`hsl(${i*47},80%,70%)`;
+    d.innerHTML=PHOTOS[i]?`<img src="${PHOTOS[i]}" alt="">`:emo[i%emo.length];
+    
+    d.style.zIndex = 10 + i; 
+    document.body.appendChild(d);
+    
+    const row = Math.floor(i/cols);
+    const col = i%cols;
+    
+    const offsetX = (Math.random() - 0.5) * 6;
+    const offsetY = (Math.random() - 0.5) * 6;
+    
+    const x = ((col + 0.5) / cols) * 100 + offsetX;
+    const y = 25 + ((row + 0.5) / rows) * 60 + offsetY; 
+    
+    setTimeout(()=>{
+      d.style.left=x+'%';
+      d.style.top=y+'%';
+      d.style.transform=`scale(1) rotate(${(Math.random()-.5)*24}deg)`;
+    }, 200+i*250); 
+  }
+  $('final').style.opacity=1;
+};
+</script>
+</body>
+</html>
